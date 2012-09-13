@@ -60,22 +60,31 @@ static HTTPRequester *sharedInstance = nil;
 }
 
 #pragma mark - POST Interface
-// TODO
+
 - (void)postRequest:(HTTPRequest *)httpRequest {
     
-    NSString *urlString = [NSString stringWithFormat:@"%@?", httpRequest.url];
+    NSData *body = nil;
     
-    for(NSString *key in [httpRequest.parameters allKeys]) {
-        urlString = [NSString stringWithFormat:@"%@%@=%@&", urlString, key, [httpRequest.parameters objectForKey:key]];
+    
+    
+    NSMutableString *params = [[NSMutableString alloc] init];
+    
+    for (id key in [httpRequest.parameters allKeys]) {
+        NSString *encodedKey = [key stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        CFStringRef value = (__bridge CFStringRef)[httpRequest.parameters objectForKey:key];
+        CFStringRef encodedValue = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, value, NULL, (CFStringRef)@";/?:@&=+$,",kCFStringEncodingUTF8);
+        [params appendFormat:@"%@=%@&", encodedKey, encodedValue];
     }
     
-    urlString = [urlString substringWithRange:NSMakeRange(0, [urlString length]-1)];
+    [params deleteCharactersInRange:NSMakeRange([params length] - 1, 1)];
+
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:httpRequest.url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:[httpRequest.timeoutInterval floatValue]];
     
-    NSURL *requestURL = [NSURL URLWithString:urlString];
-    
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:[httpRequest.timeoutInterval floatValue]];
+    body = [params dataUsingEncoding:NSUTF8StringEncoding];
     
     [request setHTTPMethod:@"POST"];
+    [request setAllHTTPHeaderFields:httpRequest.headers];
+    [request setHTTPBody:body];
     
     NSURLConnection *requestConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
     if (!requestConnection ) {

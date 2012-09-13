@@ -30,12 +30,18 @@
         _HTTPRequestEventDidFinishLoadingDictionary = [[NSMutableDictionary alloc] init];
         _HTTPRequestEventDidFailToLoadDictionary = [[NSMutableDictionary alloc] init];
         
+        _headers = [[NSMutableDictionary alloc] init];
+        
         _timeoutInterval = [NSNumber numberWithFloat:DEFAULT_TIMEOUT_INTERVAL];
 
     }
     return self;
 }
 
+
+- (void)addHeader:(NSString *)headerType headerValue:(NSString *)value {
+    [self.headers setValue:value forKey:headerType];
+}
 
 - (void)addParameterWithKey:(NSString *)key value:(NSString *)value {
     [self.parameters setObject:value forKey:key];
