@@ -55,7 +55,7 @@ static HTTPRequester *sharedInstance = nil;
         [self.delegate request:httpRequest didFailWithError:[NSError errorWithDomain:@"Request Error" code:1 userInfo:nil]];
     }
     
-    CFDictionaryAddValue(self.connectionData, (__bridge const void *)(requestConnection), (__bridge const void *)(httpRequest));
+    CFDictionarySetValue(self.connectionData, (__bridge void *)(requestConnection), (__bridge void *)(httpRequest));
 
 }
 
@@ -90,7 +90,7 @@ static HTTPRequester *sharedInstance = nil;
     if (!requestConnection ) {
     }
     
-    CFDictionaryAddValue(self.connectionData, (__bridge const void *)(requestConnection), (__bridge const void *)(httpRequest));
+    CFDictionaryAddValue(self.connectionData, (__bridge void *)(requestConnection), (__bridge void *)(httpRequest));
 
 }
 
@@ -98,7 +98,7 @@ static HTTPRequester *sharedInstance = nil;
 #pragma mark - NSURLConnectionDelegate Protocol Implementation
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    HTTPRequest *httpRequest = (__bridge HTTPRequest *)(CFDictionaryGetValue(self.connectionData, (__bridge const void *)(connection)));
+    HTTPRequest *httpRequest = (__bridge HTTPRequest *)(CFDictionaryGetValue(self.connectionData, (__bridge void *)(connection)));
     
     for (id target in [httpRequest.HTTPRequestEventDidBeginLoadingDictionary allKeys]) {
         SEL action = NSSelectorFromString([httpRequest.HTTPRequestEventDidBeginLoadingDictionary objectForKey:target]);
@@ -107,14 +107,14 @@ static HTTPRequester *sharedInstance = nil;
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    HTTPRequest *httpRequest = (__bridge HTTPRequest *)(CFDictionaryGetValue(self.connectionData, (__bridge const void *)(connection)));
+    HTTPRequest *httpRequest = (__bridge HTTPRequest *)(CFDictionaryGetValue(self.connectionData, (__bridge void *)(connection)));
 
     [httpRequest.responseData appendData:data];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 
-    HTTPRequest *httpRequest = (__bridge HTTPRequest *)(CFDictionaryGetValue(self.connectionData, (__bridge const void *)(connection)));
+    HTTPRequest *httpRequest = (__bridge HTTPRequest *)(CFDictionaryGetValue(self.connectionData, (__bridge void *)(connection)));
     HTTPResponse *httpResponse = [[HTTPResponse alloc] initWithRequest:httpRequest];
 
     for (id target in [httpRequest.HTTPRequestEventDidFinishLoadingDictionary allKeys]) {
@@ -125,7 +125,7 @@ static HTTPRequester *sharedInstance = nil;
 
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    HTTPRequest *httpRequest = (__bridge HTTPRequest *)(CFDictionaryGetValue(self.connectionData, (__bridge const void *)(connection)));
+    HTTPRequest *httpRequest = (__bridge HTTPRequest *)(CFDictionaryGetValue(self.connectionData, (__bridge void *)(connection)));
     [self.delegate request:httpRequest didFailWithError:error];
     
     for (id target in [httpRequest.HTTPRequestEventDidFailToLoadDictionary allKeys]) {

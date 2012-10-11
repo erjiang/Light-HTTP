@@ -51,13 +51,13 @@
     
     switch (event) {
         case HTTPRequestEventDidBeginLoading:
-            CFDictionaryAddValue((__bridge CFMutableDictionaryRef)(self.HTTPRequestEventDidBeginLoadingDictionary), (__bridge const void *)(target), (__bridge const void *)(NSStringFromSelector(selector)));
+            CFDictionaryAddValue((__bridge CFMutableDictionaryRef)(self.HTTPRequestEventDidBeginLoadingDictionary), (__bridge void *)(target), (__bridge void *)(NSStringFromSelector(selector)));
             break;
         case HTTPRequestEventDidFinishLoading:
-            CFDictionaryAddValue((__bridge CFMutableDictionaryRef)(self.HTTPRequestEventDidFinishLoadingDictionary), (__bridge const void *)(target), (__bridge const void *)(NSStringFromSelector(selector)));
+            CFDictionaryAddValue((__bridge CFMutableDictionaryRef)(self.HTTPRequestEventDidFinishLoadingDictionary), (__bridge void *)(target), (__bridge void *)(NSStringFromSelector(selector)));
             break;
         case HTTPRequestEventDidFailToLoad:
-            CFDictionaryAddValue((__bridge CFMutableDictionaryRef)(self.HTTPRequestEventDidFailToLoadDictionary), (__bridge const void *)(target), (__bridge const void *)(NSStringFromSelector(selector)));
+            CFDictionaryAddValue((__bridge CFMutableDictionaryRef)(self.HTTPRequestEventDidFailToLoadDictionary), (__bridge void *)(target), (__bridge void *)(NSStringFromSelector(selector)));
             break;
         default:
             break;
