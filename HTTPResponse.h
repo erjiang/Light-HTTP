@@ -13,7 +13,7 @@
 
 - (id)initWithRequest:(HTTPRequest *)request;
 
-- (NSDictionary *)jsonDictionaryValue;
+- (NSArray *)jsonArrayValue;
 - (NSString *)stringValue;
 - (UIImage *)imageValue;
 

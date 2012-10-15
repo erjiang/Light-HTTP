@@ -24,15 +24,25 @@
     return self;
 }
 
-- (NSDictionary *)jsonDictionaryValue {
+- (NSArray *)jsonArrayValue {
     NSError *error;
-    NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:self.request.responseData options:kNilOptions error:&error];
+    NSArray *array;
+    
+    id serialized = [NSJSONSerialization JSONObjectWithData:self.request.responseData options:kNilOptions error:&error];
+    
+    if([serialized isKindOfClass:[NSArray class]]) {
+        array = serialized;
+    }
+    else if([serialized isKindOfClass:[NSDictionary class]]) {
+        array = [NSArray arrayWithObject:serialized];
+    }
+    
     
     if(error) {
         return nil;
     }
     else {
-        return dictionary;
+        return array;
     }
 }
 
